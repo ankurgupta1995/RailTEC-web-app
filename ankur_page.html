@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>UIUC RailTEC</title>
+  <link rel="shortcut icon" href="http://ict.uiuc.edu/railroad/favicon.ico">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="js/search_db.js"></script>
+</head>
+
+<body>
+    <form action="add_file.php" method="post" enctype="multipart/form-data">
+      <input type="file" name="file[]" multiple>
+      <input type="submit" name="btn_submit" value="Upload Load File" />
+    </form>
+
+    <form action="search.php" method="post" class="form-horizontal">
+
+      <fieldset>
+        <!-- Form Name -->
+        <legend>Criteria select</legend>
+
+        <!-- Select Basic -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="Location">Select Site</label>
+          <div class="col-md-4">
+            <select id="LocationList" class="form-control"></select>
+          </div>
+        </div>
+        <br/>
+
+        <!-- Select Basic -->
+        <div class="form-group" id="DirectionList">
+          <label class="col-md-4 control-label" for="Direction">Select Direcion</label>
+          <div class="col-md-4">
+            <select id="Direction" name="Direction" class="form-control">
+              <option value="All" selected="selected">All</option>
+              <option value="Inbound">Inbound</option>
+              <option value="Outbound">Outbound</option>
+            </select>
+          </div>
+        </div>
+
+
+        <br/> From:
+        <input type="date" id="dateFrom" value=""/>
+        <br/> To:
+        <input type="date" id="dateTo" value=""/>
+        <br/>
+        <br/>
+        <input type="submit" name="btn_submit2" value="Search file" />
+      </fieldset>
+
+    </form>
+</body>
+<footer>
+</footer>
+
+</html>
