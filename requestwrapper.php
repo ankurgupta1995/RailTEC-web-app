@@ -16,7 +16,6 @@ switch ($method) {
 	case 'GET':
 		$ret_val = find_unique_locations($conn);
 		echo $ret_val;
-		# code...
 		break;
 	
 	case 'POST':
@@ -29,5 +28,7 @@ switch ($method) {
 		break;
 }
 
+
+close_connection($conn);
 
 ?>

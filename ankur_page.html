@@ -7,7 +7,11 @@
   <link rel="shortcut icon" href="http://ict.uiuc.edu/railroad/favicon.ico">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="js/search_db.js"></script>
+  <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+  <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 </head>
+
 
 <body>
     <form action="add_file.php" method="post" enctype="multipart/form-data">
@@ -15,17 +19,17 @@
       <input type="submit" name="btn_submit" value="Upload Load File" />
     </form>
 
-    <form action="search.php" method="post" class="form-horizontal">
+    <form id = "main-form" action="search.php" method="post" class="form-horizontal">
 
       <fieldset>
         <!-- Form Name -->
         <legend>Criteria select</legend>
 
         <!-- Select Basic -->
-        <div class="form-group">
+        <div class="form-group" id = "Location">
           <label class="col-md-4 control-label" for="Location">Select Site</label>
           <div class="col-md-4">
-            <select id="LocationList" class="form-control"></select>
+            <select id="LocationList" class="form-control" name = "LocationList"></select>
           </div>
         </div>
         <br/>
@@ -41,7 +45,14 @@
             </select>
           </div>
         </div>
+        <br/>
 
+
+        <div class="form-group" id = "columnlist">
+          </div>
+        <br/>
+
+        <!-- Include div for slider here -->
 
         <br/> From:
         <input type="date" id="dateFrom" value=""/>
