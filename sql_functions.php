@@ -463,7 +463,11 @@ function get_columns($conn, $loc)
 
 function get_max_axle($conn, $loc, $datefrom, $dateto)
 {
+  $loc = json_decode($loc);
+  $datefrom = json_decode($datefrom);
+  $dateto = json_decode($dateto);
   $ret_array = Array();
+
   if(strlen($loc) > 1)
   {
     $new_loc = explode(" ", $loc);
@@ -474,16 +478,26 @@ function get_max_axle($conn, $loc, $datefrom, $dateto)
     }
   }
   $location .= "_peaks";
-  $sql = "SELECT MAX(axle) FROM trainInfo AS t1, " . $location . " AS t2 HAVING t1.id = t2.id";
-  if($datefrom !== "")
-    $sql .= " AND date_format(t1.t_date, '%Y-%m-%d') >= '" . $datefrom ."'";
-  if($dateto !== "")
-    $sql .= " AND date_format(t1.t_date, '%Y-%m-%d') <= '" . $dateto ."'";
-  $result = $conn->query($sql);
-  if($result->num_rows > 0)
-    array_push($ret_array, $result);
 
-  return json_encode($ret_array);
+  $sql = "SELECT MAX(axle) FROM trainInfo AS t1 INNER JOIN " . $location . " AS t2 ON t1.id = t2.id ";
+
+  if($datefrom !== "" || $dateto !== "")
+    $sql .= "WHERE";
+  if($datefrom !== "")
+    $sql .= " date_format(t_date, '%Y-%m-%d') >= '" . $datefrom ."'";
+  if($datefrom !== "" && $dateto !== "")
+    $sql .= " AND";
+  if($dateto !== "")
+    $sql .= " date_format(t_date, '%Y-%m-%d') <= '" . $dateto ."'";
+
+  $result = $conn->query($sql);
+  
+  if($result->num_rows > 0)
+  {
+    return json_encode($result->fetch_assoc()["MAX(axle)"]);
+  }
+  else
+    return json_encode($conn->error);
 }
 
 //*******************************************************************************************************************************

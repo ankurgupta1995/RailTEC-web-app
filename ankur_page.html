@@ -10,6 +10,8 @@
   <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
   <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
   <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" rel = "stylesheet">
 </head>
 
 
@@ -35,11 +37,11 @@
         <br/>
 
         <!-- Select Basic -->
-        <div class="form-group" id="DirectionList">
+        <div class="form-group" id="Direction">
           <label class="col-md-4 control-label" for="Direction">Select Direcion</label>
           <div class="col-md-4">
             <select id="Direction" name="Direction" class="form-control">
-              <option value="All" selected="selected">All</option>
+              <option value="All">All</option>
               <option value="Inbound">Inbound</option>
               <option value="Outbound">Outbound</option>
             </select>
@@ -47,19 +49,38 @@
         </div>
         <br/>
 
-
-        <div class="form-group" id = "columnlist">
-          </div>
+        Select Date:<br/>
+        <label for="from">From</label><input type="text" id="dateFrom" name="from">
+        <label for="to">to</label><input type="text" id="dateTo" name="to">
+        <br/><br/>Select Time:<br/>
+        <label for= "timeFrom">From</label><input type = "text" id= "timeFrom" name = "timeFrom">
+        <label for="timeTo">to</label><input type="text" id="timeTo" name="timeTo">
+        <br/><br/>
+        <div class="form-group" id = "columnlist"></div>
         <br/>
 
-        <!-- Include div for slider here -->
+        <p>
+          <label for='temperature'>Temperature:</label>
+          <input type="text" id='temperature' readonly style="border:0; color:#f6931f; font-weight:bold;">
+        </p>
 
-        <br/> From:
-        <input type="date" id="dateFrom" value=""/>
-        <br/> To:
-        <input type="date" id="dateTo" value=""/>
-        <br/>
-        <br/>
+        <div id = 'temp-slider'></div>
+
+        <p>
+          <label for='speed'>Speed:</label>
+          <input type="text" id='speed' readonly style="border:0; color:#f6931f; font-weight:bold;">
+        </p>
+
+        <div id = 'speed-slider'></div>
+
+        <p>
+          <label for='axles'>Axles:</label>
+          <input type="text" id='axles' readonly style="border:0; color:#f6931f; font-weight:bold;">
+        </p>
+
+        <div id = 'axle-slider'></div>
+
+        <br/><br/>
         <input type="submit" name="btn_submit2" value="Search file" />
       </fieldset>
 
