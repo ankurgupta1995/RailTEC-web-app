@@ -12,11 +12,35 @@ $db_name = "tecrail_db";
 $conn = start_conn($servername, $username, $password, $db_name);
 
 
+
+
+//MAKE A DOUBLE PHP WRAPPER FOR POST REQUESTS. USE NUMBERS/STRINGS/WHATEVER.
+
 switch ($method) {
 	
 	case 'POST':
-		$ret_val = get_max_axle($conn, $_POST['location'], $_POST['datefrom'], $_POST['dateto']);
-		echo $ret_val;
+		/*switch ($_POST['reqType']) {
+			case 'getdates':
+				$ret_val = get_dates();
+				break;
+			case 'getaxle':
+				$ret_val = get_max_axle();
+				break;
+			case 'gettime':
+				$ret_val = get_times();
+				break;
+			case 'gettemp':
+				$ret_val = get_temps();
+				break;
+			case 'getspeed':
+				$ret_val = get_speeds();
+				break;
+			default:
+				$ret_val = "reqType is invalid."
+				break;
+		}
+		echo $ret_val;*/
+		echo json_encode($_POST);
 		break;
 
 	default:

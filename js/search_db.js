@@ -15,48 +15,105 @@ $(document).ready(function(){
   add.make_speed_slider();
   //-------------------------------------------------------------------------------------------
 
-  //----------------------------------------INIT VALUES IN LABELS-----------------------------------------------------
+  //----------------------------------------INIT SLIDER VALUES IN LABELS-----------------------------------------------------
+  //DO THIS AFTER SETTING MIN AND MAX EVERY TIME----------------------------------------------------------------
+  var axle_vals = [$("#axle-slider").slider("option", "min"), $("#axle-slider").slider("option", "max")];
+  $("#axle-slider").slider("option", "values", axle_vals);
+  var speed_vals = [$("#speed-slider").slider("option", "min"), $("#speed-slider").slider("option", "max")];
+  $("#speed-slider").slider("option", "values", speed_vals);
+  var temp_vals = [$("#temp-slider").slider("option", "min"), $("#temp-slider").slider("option", "max")];
+  $("#temp-slider").slider("option", "values", temp_vals);
+  //-----------------------------------------------------------------------------------------------------------------
   $( "#axles" ).val($( "#axle-slider" ).slider( "values", 0 ) + " - " + $( "#axle-slider" ).slider( "values", 1 ) );
   $( "#temperature" ).val($( "#temp-slider" ).slider( "values", 0 ) + " - " + $( "#temp-slider" ).slider( "values", 1 ) );
   $( "#speed" ).val($( "#speed-slider" ).slider( "values", 0 ) + " - " + $( "#speed-slider" ).slider( "values", 1 ) );
   //--------------------------------------------------------------------------------------------------------------------
 
+
   var loc = document.getElementById('LocationList');
   var dtfrom = document.getElementById('dateFrom');
   var dtto = document.getElementById('dateTo');
-  var dir = document.getElementById('Direction');
+  var dir = document.getElementById('DirectionList');
   var timefrom = document.getElementById('timeFrom');
   var timeto = document.getElementById('timeTo');
-  var axle = document.getElementById('axle-slider');
-  var speed = document.getElementById('speed-slider');
-  var temp = document.getElementById('temp-slider');
+  var axle = $('#axle-slider');
+  var speed = $('#speed-slider');
+  var temp = $('#temp-slider');
 
 
   add.update_columns(loc.value);
-  add.get_axles(loc.value, dtfrom.value, dtto.value);
 
+  //DONE
   loc.onchange = function (e) {
       console.log(this.value);
       add.update_columns(this.value);
-      add.get_axles(this.value, dtfrom.value, dtto.value);
+      add.get_dates(this.value, dir.value);
+      add.get_time(this.value, dir.value, dtfrom.value, dtto.value);
+      add.get_temp(this.value, dir.value, dtfrom.value, dtto.value, timefrom.value, timeto.value);
+      add.get_speed(this.value, dir.value, dtfrom.value, dtto.value, timefrom.value, timeto.value, 
+                    temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
+      add.get_axles(this.value, dtfrom.value, dtto.value, dir.value, timefrom.value, timeto.value, 
+                    temp.slider("option", "values")[0], temp.slider("option", "values")[1],
+                    speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
   };
 
+  //DONE
   dtfrom.onchange = function(e){
-    console.log(this.value);
+    console.log(loc.value);
+    add.get_time(loc.value, dir.value, this.value, dtto.value);
+    add.get_temp(loc.value, dir.value, this.value, dtto.value, timefrom.value, timeto.value);
+    add.get_speed(loc.value, dir.value, this.value, dtto.value, timefrom.value, timeto.value, 
+                  temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
+    add.get_axles(loc.value, this.value, dtto.value, dir.value, timefrom.value, timeto.value, 
+                  temp.slider("option", "values")[0], temp.slider("option", "values")[1],
+                  speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
   }
 
+  //DONE
   dtto.onchange = function(e){
     console.log(this.value);
+    add.get_time(loc.value, dir.value, dtfrom.value, this.value);
+    add.get_temp(loc.value, dir.value, dtfrom.value, this.value, timefrom.value, timeto.value);
+    add.get_speed(loc.value, dir.value, dtfrom.value, this.value, timefrom.value, timeto.value, 
+                  temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
+    add.get_axles(loc.value, dtfrom.value, this.value, dir.value, timefrom.value, timeto.value, 
+                  temp.slider("option", "values")[0], temp.slider("option", "values")[1],
+                  speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
   }
 
-
-  //figure this out
+  //DONE
   dir.onchange = function(e){
     console.log(this.value);
+    add.get_dates(loc.value, this.value);
+    add.get_time(loc.value, this.value, dtfrom.value, dtto.value);
+    add.get_temp(loc.value, this.value, dtfrom.value, dtto.value, timefrom.value, timeto.value);
+    add.get_speed(loc.value, this.value, dtfrom.value, dtto.value, timefrom.value, timeto.value, 
+                  temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
+    add.get_axles(loc.value, dtfrom.value, dtto.value, this.value, timefrom.value, timeto.value, 
+                  temp.slider("option", "values")[0], temp.slider("option", "values")[1],
+                  speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
   }
 
+  //DONE
   timefrom.onchange = function(e){
     console.log(this.value);
+    add.get_temp(loc.value, dir.value, dtfrom.value, dtto.value, this.value, timeto.value);
+    add.get_speed(loc.value, dir.value, dtfrom.value, dtto.value, this.value, timeto.value, 
+                  temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
+    add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, this.value, timeto.value, 
+                  temp.slider("option", "values")[0], temp.slider("option", "values")[1],
+                  speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+  }
+
+  //DONE
+  timeto.onchange = function(e){
+    console.log(this.value);
+    add.get_temp(loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, this.value);
+    add.get_speed(loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, this.value, 
+                  temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
+    add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, timefrom.value, this.value, 
+                  temp.slider("option", "values")[0], temp.slider("option", "values")[1],
+                  speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
   }
 
   //sliders do not have onchange.
@@ -99,7 +156,7 @@ var add = {
   },
 
   make_date_picker : function(){
-    var dateFormat = "yy-mm-dd";
+    var dateFormat = "mm/dd/yy";
       from = $( "#dateFrom" )
         .datepicker({
           defaultDate: "+1w",
@@ -123,7 +180,7 @@ var add = {
 
     getDate : function( element ) {
       var date;
-      var dateFormat = "yy-mm-dd";
+      var dateFormat = "mm/dd/yy";
       try {
         date = $.datepicker.parseDate( dateFormat, element.value );
       } catch( error ) {
@@ -132,24 +189,47 @@ var add = {
       return date;
     },
 
+  //set values to min and max for all sliders in init.
   make_speed_slider : function(){
+    var loc = document.getElementById('LocationList');
+    var dtfrom = document.getElementById('dateFrom');
+    var dtto = document.getElementById('dateTo');
+    var dir = document.getElementById('DirectionList');
+    var timefrom = document.getElementById('timeFrom');
+    var timeto = document.getElementById('timeTo');
+    var temp = $('#temp-slider');
     $('#speed-slider').slider({
       range:true,
       step:0.01,
       slide:function(event, ui){
         $('#speed').val( "$" + ui.values[0] + " - $" + ui.values[1]);
         document.getElementById("speed").value = ui.values[0] + " - " + ui.values[1];
+        add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, timefrom.value, this.value, 
+                      temp.slider("option", "values")[0], temp.slider("option", "values")[1],
+                      ui.values[0], ui.values[1]);
       }
     });
   },
 
   make_temp_slider : function(){
+    var loc = document.getElementById('LocationList');
+    var dtfrom = document.getElementById('dateFrom');
+    var dtto = document.getElementById('dateTo');
+    var dir = document.getElementById('DirectionList');
+    var timefrom = document.getElementById('timeFrom');
+    var timeto = document.getElementById('timeTo');
+    var speed = $('#speed-slider');
+    var temp = $('#temp-slider');
     $('#temp-slider').slider({
       range:true,
       step:0.01,
       slide:function(event, ui){
         $('#temperature').val( "$" + ui.values[0] + " - $" + ui.values[1]);
         document.getElementById("temperature").value = ui.values[0] + " - " + ui.values[1];
+        add.get_speed(loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, timeto.value, 
+                  ui.values[0], ui.values[1]);
+        add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, timefrom.value, timeto.value, 
+                  ui.values[0], ui.values[1], speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
       }
     });
   },
@@ -162,7 +242,7 @@ var add = {
       slide:function(event, ui){
         $('#axles').val( "$" + ui.values[0] + " - $" + ui.values[1]);
         document.getElementById("axles").value = ui.values[0] + " - " + ui.values[1];
-        console.log(ui.values[0]);
+        console.log(typeof(ui.values[0]));
         console.log(ui.values[1]);
       }
     });
@@ -234,11 +314,55 @@ var add = {
   },
 
 // add direction, min and max speed, min and max temp
-  get_axles : function(location, datefrom, dateto){
-    location = JSON.stringify(location);
-    datefrom = JSON.stringify(datefrom);
-    dateto = JSON.stringify(dateto);
-    postData = {'location':location, 'datefrom':datefrom, 'dateto':dateto};
+  get_axles : function(location, datefrom, dateto, direction, timefrom, timeto, tempfrom, tempto, speedfrom, speedto){
+    postData = {'location' : location, 'dir':direction, 'datefrom':datefrom, 'dateto':dateto, 'timefrom':timefrom, 'timeto':timeto,
+                'tempfrom':tempfrom, 'tempto':tempto, 'speedfrom':speedfrom, 'speedto':speedto, 'reqType':"getaxle"};
+    $.ajax({
+      cache:false,
+      type:'POST',
+      data:postData,
+      async:false,
+      url:'requestwrapper2.php',
+      crossDomain:true,
+/*      success:function(data){
+        var new_max = parseInt(data.replace(/^"|"$/g, ""));
+        if(isNaN(new_max))
+          alert("new max is not a number");
+        else
+        {
+          $("#axle-slider").slider("option", "max", new_max);
+        }
+      },*/
+      success:function(data){
+        console.log(data);
+      },
+      failure:function(){
+        alert("Error!!!");
+      }
+    });
+  },
+
+  get_dates : function(location, direction){
+    //make a keyword mapping to differentiate between different post calls.
+    postData = {'location' : location, 'dir':direction, 'reqType' : "getdates"};
+    $.ajax({
+      cache:false,
+      type:'POST',
+      data:postData,
+      async:false,
+      url: 'requestwrapper2.php',
+      crossDomain: true,
+      success:function(data){
+        console.log(data);
+      },
+      failure:function(){
+        alert("could not get the min and max dates!");
+      }
+    });
+  },
+
+  get_time : function(location, direction, datefrom, dateto){
+    postData = {'location' : location, 'dir':direction, 'datefrom':datefrom, 'dateto':dateto, 'reqType':"gettime"};
     $.ajax({
       cache:false,
       type:'POST',
@@ -247,16 +371,47 @@ var add = {
       url:'requestwrapper2.php',
       crossDomain:true,
       success:function(data){
-        var new_max = parseInt(data.replace(/^"|"$/g, ""));
-        if(isNaN(new_max))
-          alert("new max is not a number");
-        else
-        {
-          $("#axle-slider").slider("option", "max", new_max);
-        }
+        console.log(data);
       },
       failure:function(){
-        alert("Error!!!");
+        alert("could not get the min and max times!");
+      }
+    });
+  },
+
+  get_temp : function(location, direction, datefrom, dateto, timefrom, timeto){
+    postData = {'location' : location, 'dir':direction, 'datefrom':datefrom, 'dateto':dateto, 'timefrom':timefrom, 'timeto':timeto, 'reqType':"gettemp"};
+    $.ajax({
+      cache:false,
+      type:'POST',
+      data:postData,
+      async:false,
+      url:'requestwrapper2.php',
+      crossDomain:true,
+      success:function(data){
+        console.log(data);
+      },
+      failure:function(){
+        alert("could not get the min and max temps!");
+      }
+    });
+  },
+
+  get_speed : function(location, direction, datefrom, dateto, timefrom, timeto, tempfrom, tempto){
+    postData = {'location' : location, 'dir':direction, 'datefrom':datefrom, 'dateto':dateto, 'timefrom':timefrom, 'timeto':timeto,
+                'tempfrom':tempfrom, 'tempto':tempto, 'reqType':"getspeed"};
+    $.ajax({
+      cache:false,
+      type:'POST',
+      data:postData,
+      async:false,
+      url:'requestwrapper2.php',
+      crossDomain:true,
+      success:function(data){
+        console.log(data);
+      },
+      failure:function(){
+        alert("could not get the min and max speeds!");
       }
     });
   }

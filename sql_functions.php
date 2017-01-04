@@ -463,9 +463,6 @@ function get_columns($conn, $loc)
 
 function get_max_axle($conn, $loc, $datefrom, $dateto)
 {
-  $loc = json_decode($loc);
-  $datefrom = json_decode($datefrom);
-  $dateto = json_decode($dateto);
   $ret_array = Array();
 
   if(strlen($loc) > 1)
@@ -491,7 +488,7 @@ function get_max_axle($conn, $loc, $datefrom, $dateto)
     $sql .= " date_format(t_date, '%Y-%m-%d') <= '" . $dateto ."'";
 
   $result = $conn->query($sql);
-  
+
   if($result->num_rows > 0)
   {
     return json_encode($result->fetch_assoc()["MAX(axle)"]);
