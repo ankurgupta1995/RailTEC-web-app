@@ -19,28 +19,31 @@ $conn = start_conn($servername, $username, $password, $db_name);
 switch ($method) {
 	
 	case 'POST':
-		/*switch ($_POST['reqType']) {
+		switch ($_POST['reqType']) {
 			case 'getdates':
-				$ret_val = get_dates();
+				$ret_val = get_dates($conn, $_POST['location'], $_POST['dir']);
 				break;
 			case 'getaxle':
-				$ret_val = get_max_axle();
+				$ret_val = get_max_axle($conn, $_POST['location'], $_POST['dir'], $_POST['datefrom'], $_POST['dateto'],
+										$_POST['timefrom'], $_POST['timeto'], $_POST['tempfrom'], $_POST['tempto'], 
+										$_POST['speedfrom'], $_POST['speedto']);
 				break;
 			case 'gettime':
-				$ret_val = get_times();
+				$ret_val = get_times($conn, $_POST['location'], $_POST['dir'], $_POST['datefrom'], $_POST['dateto']);
 				break;
 			case 'gettemp':
-				$ret_val = get_temps();
+				$ret_val = get_temps($conn, $_POST['location'], $_POST['dir'], $_POST['datefrom'], $_POST['dateto'],
+									 $_POST['timefrom'], $_POST['timeto']);
 				break;
 			case 'getspeed':
-				$ret_val = get_speeds();
+				$ret_val = get_speeds($conn, $_POST['location'], $_POST['dir'], $_POST['datefrom'], $_POST['dateto'],
+									  $_POST['timefrom'], $_POST['timeto'], $_POST['tempfrom'], $_POST['tempto']);
 				break;
 			default:
-				$ret_val = "reqType is invalid."
+				$ret_val = "reqType is invalid.";
 				break;
 		}
-		echo $ret_val;*/
-		echo json_encode($_POST);
+		echo json_encode($ret_val);
 		break;
 
 	default:

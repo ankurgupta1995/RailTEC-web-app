@@ -159,7 +159,7 @@ var add = {
     var dateFormat = "mm/dd/yy";
       from = $( "#dateFrom" )
         .datepicker({
-          defaultDate: "+1w",
+          dateFormat:"mm/dd/yy",
           changeMonth: true,
           changeYear: true,
           numberOfMonths: 1
@@ -168,7 +168,7 @@ var add = {
           to.datepicker( "option", "minDate", add.getDate( this ) );
         }),
       to = $( "#dateTo" ).datepicker({
-        defaultDate: "+1w",
+        dateFormat:"mm/dd/yy",
         changeMonth: true,
         changeYear: true,
         numberOfMonths: 1
@@ -185,6 +185,7 @@ var add = {
         date = $.datepicker.parseDate( dateFormat, element.value );
       } catch( error ) {
         date = null;
+        console.log(error);
       }
       return date;
     },
@@ -204,7 +205,7 @@ var add = {
       slide:function(event, ui){
         $('#speed').val( "$" + ui.values[0] + " - $" + ui.values[1]);
         document.getElementById("speed").value = ui.values[0] + " - " + ui.values[1];
-        add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, timefrom.value, this.value, 
+        add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, timefrom.value, timeto.value, 
                       temp.slider("option", "values")[0], temp.slider("option", "values")[1],
                       ui.values[0], ui.values[1]);
       }
@@ -324,17 +325,19 @@ var add = {
       async:false,
       url:'requestwrapper2.php',
       crossDomain:true,
-/*      success:function(data){
-        var new_max = parseInt(data.replace(/^"|"$/g, ""));
-        if(isNaN(new_max))
-          alert("new max is not a number");
+      success:function(data){
+        data = JSON.parse(data);
+        console.log(data);
+        if(isNaN(data.max))
+          alert("Max is invalid");
         else
         {
-          $("#axle-slider").slider("option", "max", new_max);
+          var as = $("#axle-slider");
+          as.slider("option", "max", data.max);
+          as.slider("option", "values", [0, data.max]);
+          $('#axles').val( "$" + 0 + " - $" + data.max);
+          document.getElementById("axles").value = 0 + " - " + data.max;
         }
-      },*/
-      success:function(data){
-        console.log(data);
       },
       failure:function(){
         alert("Error!!!");
@@ -353,7 +356,18 @@ var add = {
       url: 'requestwrapper2.php',
       crossDomain: true,
       success:function(data){
-        console.log(data);
+        var dates = JSON.parse(data);
+        var dateFormat = "mm/dd/yy";
+        console.log($.datepicker.parseDate( dateFormat, dates.min));
+        var df = $("#dateFrom");
+        var dt = $("#dateTo");
+        df.datepicker('option', {minDate : $.datepicker.parseDate( dateFormat, dates.min)});
+        df.datepicker("setDate", $.datepicker.parseDate( dateFormat, dates.min));
+        dt.datepicker('option', {maxDate : $.datepicker.parseDate( dateFormat, dates.max)});
+        dt.datepicker("setDate", $.datepicker.parseDate( dateFormat, dates.max));
+        dt.datepicker("refresh");
+        df.datepicker("refresh");
+        //update min and max times for dt and df resp
       },
       failure:function(){
         alert("could not get the min and max dates!");
@@ -371,7 +385,17 @@ var add = {
       url:'requestwrapper2.php',
       crossDomain:true,
       success:function(data){
+        data = JSON.parse(data);
         console.log(data);
+        var tf = $("#timeFrom");
+        var tt = $("#timeTo");
+        tf.timepicker("option", {minTime:data.min});
+        tf.timepicker("setTime", data.min);
+        tf.timepicker("refresh");
+        tt.timepicker("option", {maxTime:data.max});
+        tt.timepicker("setTime", data.max);
+        tf.timepicker("refresh");
+        //update min and max time for tt and tf resp
       },
       failure:function(){
         alert("could not get the min and max times!");
@@ -389,7 +413,17 @@ var add = {
       url:'requestwrapper2.php',
       crossDomain:true,
       success:function(data){
+        //needs to be fixed.....
+        data = JSON.parse(data);
         console.log(data);
+        var tf = $("#temp-slider");
+        tf.slider("option", "min", data.min);
+        tf.slider("option", "max", data.max);
+        //change label value
+        tf.slider("option", "values", [data.min, data.max]);
+        var tfval = tf.slider("option", "values");
+        $('#temperature').val( "$" + tfval[0] + " - $" + tfval[1]);
+        document.getElementById("temperature").value = tfval[0] + " - " + tfval[1];
       },
       failure:function(){
         alert("could not get the min and max temps!");
@@ -408,7 +442,16 @@ var add = {
       url:'requestwrapper2.php',
       crossDomain:true,
       success:function(data){
+        data = JSON.parse(data);
         console.log(data);
+        var sf = $("#speed-slider");
+        sf.slider("option", "min", data.min);
+        sf.slider("option", "max", data.max);
+        //change label value
+        sf.slider("option", "values", [data.min, data.max]);
+        var sfval = sf.slider("option", "values");
+        $('#speed').val( "$" + sfval[0] + " - $" + sfval[1]);
+        document.getElementById("speed").value = sfval[0] + " - " + sfval[1];
       },
       failure:function(){
         alert("could not get the min and max speeds!");

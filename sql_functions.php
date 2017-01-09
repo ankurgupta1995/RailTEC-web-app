@@ -461,9 +461,90 @@ function get_columns($conn, $loc)
   return json_encode($ret_array);
 }
 
-function get_max_axle($conn, $loc, $datefrom, $dateto)
+
+//--------------------------------Functions to assign min and max for search criterias---------------------------
+function get_dates($conn, $loc, $dir){
+  $ret_array = Array('min'=>0, 'max'=>0);
+  $sql = "SELECT MIN(t_date) AS min, MAX(t_date) AS max FROM trainInfo WHERE site = '" . $loc . "'";
+  if($dir !== "All")
+    $sql .= " AND dir = '" . $dir . "'";
+  $result = $conn->query($sql);
+  if($result->num_rows>0)
+  {
+    $res = $result->fetch_assoc();
+    $min_date = date("m/d/Y", strtotime($res['min']));
+    $max_date = date("m/d/Y", strtotime($res['max']));
+    $ret_array['min'] = $min_date;
+    $ret_array['max'] = $max_date;
+    return $ret_array;
+  }
+  else
+    return $conn->error;
+}
+
+function get_times($conn, $loc, $dir, $datefrom, $dateto){
+  $datefrom = date("Y-m-d", strtotime($datefrom));
+  $dateto = date("Y-m-d", strtotime($dateto));
+  $ret_array = Array('min'=>0, 'max'=>0);
+  $sql = "SELECT MIN(t_time) AS min, MAX(t_time) AS max FROM trainInfo WHERE site = '" . $loc . "' AND date_format(t_date, '%Y-%m-%d') BETWEEN '" . $datefrom . "' AND '" . $dateto . "'";
+  if($dir !== "All")
+    $sql .= " AND dir = '" . $dir . "'";
+  $result = $conn->query($sql);
+  if($result->num_rows>0)
+  {
+    $res = $result->fetch_assoc();
+    $ret_array['min'] = $res['min'];
+    $ret_array['max'] = $res['max'];
+    return $ret_array;
+  }
+  else
+    return $conn->error;
+}
+
+function get_temps($conn, $loc, $dir, $datefrom, $dateto, $timefrom, $timeto){
+  $datefrom = date("Y-m-d", strtotime($datefrom));
+  $dateto = date("Y-m-d", strtotime($dateto));
+  $ret_array = Array('min'=>0, 'max'=>0);
+  $sql = "SELECT MIN(ambient_temp) AS min, MAX(ambient_temp) AS max FROM trainInfo WHERE site = '" . $loc . "' AND date_format(t_date, '%Y-%m-%d') BETWEEN '" . $datefrom . "' AND '" . $dateto . "' AND t_time BETWEEN '" . $timefrom ."' AND '" . $timeto ."'";
+  if($dir !== "All")
+    $sql .= " AND dir = '" . $dir . "'";
+  $result = $conn->query($sql);
+  if($result->num_rows>0)
+  {
+    $res = $result->fetch_assoc();
+    $ret_array['min'] = round(floatval($res['min']),2);
+    $ret_array['max'] = round(floatval($res['max']),2);
+    return $ret_array;
+  }
+  else
+    return $conn->error;
+}
+
+function get_speeds($conn, $loc, $dir, $datefrom, $dateto, $timefrom, $timeto, $tempfrom, $tempto){
+  $datefrom = date("Y-m-d", strtotime($datefrom));
+  $dateto = date("Y-m-d", strtotime($dateto));
+  $ret_array = Array('min'=>0, 'max'=>0);
+  $sql = "SELECT MIN(speed) AS min, MAX(speed) AS max FROM trainInfo WHERE site = '" . $loc . "' AND date_format(t_date, '%Y-%m-%d') BETWEEN '" . $datefrom . "' AND '" . $dateto . "' AND t_time BETWEEN '" . $timefrom ."' AND '" . $timeto ."' AND ROUND(ambient_temp,2) BETWEEN '" . $tempfrom . "' AND '" . $tempto . "'";
+  if($dir !== "All")
+    $sql .= " AND dir = '" . $dir . "'";
+  $result = $conn->query($sql);
+  if($result->num_rows>0)
+  {
+    $res = $result->fetch_assoc();
+    $ret_array['min'] = round(floatval($res['min']),2);
+    $ret_array['max'] = round(floatval($res['max']),2);
+    return $ret_array;
+  }
+  else
+    return $conn->error;
+}
+
+
+function get_max_axle($conn, $loc, $dir, $datefrom, $dateto, $timefrom, $timeto, $tempfrom, $tempto, $speedfrom, $speedto)
 {
-  $ret_array = Array();
+  $datefrom = date("Y-m-d", strtotime($datefrom));
+  $dateto = date("Y-m-d", strtotime($dateto));
+  $ret_array = Array('max' => 0);
 
   if(strlen($loc) > 1)
   {
@@ -476,26 +557,20 @@ function get_max_axle($conn, $loc, $datefrom, $dateto)
   }
   $location .= "_peaks";
 
-  $sql = "SELECT MAX(axle) FROM trainInfo AS t1 INNER JOIN " . $location . " AS t2 ON t1.id = t2.id ";
-
-  if($datefrom !== "" || $dateto !== "")
-    $sql .= "WHERE";
-  if($datefrom !== "")
-    $sql .= " date_format(t_date, '%Y-%m-%d') >= '" . $datefrom ."'";
-  if($datefrom !== "" && $dateto !== "")
-    $sql .= " AND";
-  if($dateto !== "")
-    $sql .= " date_format(t_date, '%Y-%m-%d') <= '" . $dateto ."'";
+  $sql = "SELECT MAX(axle) as max FROM trainInfo AS t1 INNER JOIN " . $location . " AS t2 ON t1.id = t2.id WHERE date_format(t1.t_date, '%Y-%m-%d') BETWEEN '" . $datefrom . "' AND '" . $dateto . "' AND t1.t_time BETWEEN '" . $timefrom ."' AND '" . $timeto ."' AND ROUND(t1.ambient_temp,2) BETWEEN '" . $tempfrom . "' AND '" . $tempto . "' AND ROUND(t1.speed,2) BETWEEN '" . $speedfrom . "' AND '" . $speedto . "'";
 
   $result = $conn->query($sql);
 
   if($result->num_rows > 0)
   {
-    return json_encode($result->fetch_assoc()["MAX(axle)"]);
+    $ret_array['max'] = intval($result->fetch_assoc()['max']);
+    return $ret_array;
   }
   else
-    return json_encode($conn->error);
+    return $conn->error;
 }
+
+//------------------------------------------------------------------------------------------------------------------------
 
 //*******************************************************************************************************************************
 
