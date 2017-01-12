@@ -117,6 +117,22 @@ $(document).ready(function(){
   }
 
   //sliders do not have onchange.
+/*  document.getElementById("btn_submit2").click(function(){
+    console.log([loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, timeto.value, axle.slider("option", "values"), 
+                 speed.slider("option", "values"), temp.slider("option", "values")])
+  });*/
+  
+  $("#btn_submit2").click(function(){
+    var axle_vals = axle.slider("option", "values");
+  var speed_vals = speed.slider("option", "values");
+  var temp_vals = temp.slider("option", "values");
+  var cols = new Array();
+  $.each($("input[name='collist[]']:checked"),function(){
+    cols.push($(this).val());
+  });
+   console.log([loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, timeto.value, axle_vals[0], axle_vals[1], 
+                speed_vals[0], speed_vals[1] , temp_vals[0], temp_vals[1]]);
+  });
 
 
 
@@ -368,6 +384,10 @@ var add = {
         dt.datepicker("refresh");
         df.datepicker("refresh");
         //update min and max times for dt and df resp
+        df.datepicker("option", {maxDate:$.datepicker.parseDate(dateFormat, dt.val())});
+        dt.datepicker("option", {minDate:$.datepicker.parseDate(dateFormat, df.val())});
+        dt.datepicker("refresh");
+        df.datepicker("refresh");
       },
       failure:function(){
         alert("could not get the min and max dates!");
@@ -396,6 +416,10 @@ var add = {
         tt.timepicker("setTime", data.max);
         tf.timepicker("refresh");
         //update min and max time for tt and tf resp
+        tf.timepicker("option", {maxTime:tt.val()});
+        tt.timepicker("option", {minTime:tf.val()});
+        tf.timepicker("refresh");
+        tt.timepicker("refresh");
       },
       failure:function(){
         alert("could not get the min and max times!");
