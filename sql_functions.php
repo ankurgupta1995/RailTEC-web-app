@@ -365,57 +365,49 @@ function insert_peaks_peaksloc($conn, $id, $loc, $columns, $peaks_data, $peakslo
 
 
 //****************************************SEARCH FUNCTIONS***********************************************************************
-function search_function($conn, $site, $dir, $start_date, $end_date)
+function search_db($conn, $criteria)
 {
+ $datefrom = date("Y-m-d", strtotime($criteria['dtfrom']));
+  $dateto = date("Y-m-d", strtotime($criteria['dtto']));
   $ret_array = Array();
-  if($site === "All")
+
+  $loc = $criteria['loc'];
+  if(strlen($loc) > 1)
   {
-    $loc_array = Array("Metrolink Tangent", "New York City");
+    $new_loc = explode(" ", $loc);
+    $location = $new_loc[0];
+    for($j = 1; $j<sizeof($new_loc); $j++)
+    {
+      $location .= "_" . $new_loc[$j];
+    }
+  }
+  $location .= "_peaks";
+
+  $sql = "SELECT t1.t_date, t1.t_time, t2.axle, ";
+  for($i = 0; $i<sizeof($criteria['cols']); $i++)
+  {
+    $sql .= $criteria['cols'][$i];
+    if($i < sizeof($criteria['cols']) - 1)
+      $sql .= ',';
+  }
+
+  $sql .= " FROM trainInfo AS t1 INNER JOIN " . $location . " AS t2 ON t1.id = t2.id WHERE date_format(t1.t_date, '%Y-%m-%d') BETWEEN '" . $datefrom . "' AND '" . $dateto . "' AND t1.t_time BETWEEN '" . $criteria['tmfrom'] ."' AND '" . $criteria['tmto'] ."' AND ROUND(t1.ambient_temp,2) BETWEEN '" . $criteria['tempfrom'] . "' AND '" . $criteria['tempto'] . "' AND ROUND(t1.speed,2) BETWEEN '" . $criteria['speedfrom'] . "' AND '" . $criteria['speedto'] . "' AND t2.axle BETWEEN '" . $criteria['axlefrom'] . "' AND '" . $criteria['axleto'] ."'";
+
+  if($criteria['dir'] !== "All")
+    $sql .= " AND t1.dir = '" . $criteria['dir'] . "'";
+  
+  $result = $conn->query($sql);
+  if($result->num_rows > 0)
+  {
+    while($row = $result->fetch_assoc())
+    {
+      array_push($ret_array, $row);
+    }
   }
   else
-  {
-    $loc_array = Array($site);
-  }
-
-  foreach($loc_array as $loc)
-  {
-      if(strlen($loc) > 1)
-      {
-        $new_loc = explode(" ", $loc);
-        $location = $new_loc[0];
-        for($j = 1; $j<sizeof($new_loc); $j++)
-        {
-          $location .= "_" . $new_loc[$j];
-        }
-      }
-      if ($dir === "All")
-      {
-        $sql = "SELECT * FROM trainInfo as T1 INNER JOIN " . $location . "_peaks as T2 ON T1.id = T2.id WHERE date_format(T1.t_date, '%Y-%m-%d') BETWEEN  '". $start_date ."' AND '". $end_date ."'";
-        $result = $conn->query($sql);
-        if($result->num_rows > 0)
-        {
-          while($row = $result->fetch_assoc())
-          {
-            array_push($ret_array, $row);
-          }
-        }
-      }
-      else
-      {
-        $sql = "SELECT * FROM trainInfo as T1 INNER JOIN " . $location . "_peaks as T2 ON T1.id = T2.id WHERE T1.dir = '" . $dir . "' AND date_format(T1.t_date, '%Y-%m-%d') BETWEEN  '". $start_date ."' AND '". $end_date ."'";
-        $result = $conn->query($sql);
-        if($result->num_rows > 0)
-        {
-          while($row = $result->fetch_assoc())
-          {
-            array_push($ret_array, $row);
-          }
-        }
-      }
-  }
+    return $conn->error;
 
   return $ret_array;
-
 }
 
 function find_unique_locations($conn)
@@ -559,6 +551,9 @@ function get_max_axle($conn, $loc, $dir, $datefrom, $dateto, $timefrom, $timeto,
 
   $sql = "SELECT MAX(axle) as max FROM trainInfo AS t1 INNER JOIN " . $location . " AS t2 ON t1.id = t2.id WHERE date_format(t1.t_date, '%Y-%m-%d') BETWEEN '" . $datefrom . "' AND '" . $dateto . "' AND t1.t_time BETWEEN '" . $timefrom ."' AND '" . $timeto ."' AND ROUND(t1.ambient_temp,2) BETWEEN '" . $tempfrom . "' AND '" . $tempto . "' AND ROUND(t1.speed,2) BETWEEN '" . $speedfrom . "' AND '" . $speedto . "'";
 
+  if($dir !== "All")
+    $sql .= " AND dir = '" . $dir . "'";
+  
   $result = $conn->query($sql);
 
   if($result->num_rows > 0)

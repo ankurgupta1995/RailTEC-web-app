@@ -59,61 +59,86 @@ $(document).ready(function(){
 
   //DONE
   dtfrom.onchange = function(e){
-    console.log(loc.value);
-    add.get_time(loc.value, dir.value, this.value, dtto.value);
-    add.get_temp(loc.value, dir.value, this.value, dtto.value, timefrom.value, timeto.value);
-    add.get_speed(loc.value, dir.value, this.value, dtto.value, timefrom.value, timeto.value, 
-                  temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
-    add.get_axles(loc.value, this.value, dtto.value, dir.value, timefrom.value, timeto.value, 
-                  temp.slider("option", "values")[0], temp.slider("option", "values")[1],
-                  speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+    if(loc.value != "")
+    {
+      console.log(loc.value);
+      add.get_time(loc.value, dir.value, this.value, dtto.value);
+      add.get_temp(loc.value, dir.value, this.value, dtto.value, timefrom.value, timeto.value);
+      add.get_speed(loc.value, dir.value, this.value, dtto.value, timefrom.value, timeto.value, 
+                    temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
+      add.get_axles(loc.value, this.value, dtto.value, dir.value, timefrom.value, timeto.value, 
+                    temp.slider("option", "values")[0], temp.slider("option", "values")[1],
+                    speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+    }
+    else
+      alert("Please select a location");
   }
 
   //DONE
   dtto.onchange = function(e){
-    console.log(this.value);
-    add.get_time(loc.value, dir.value, dtfrom.value, this.value);
-    add.get_temp(loc.value, dir.value, dtfrom.value, this.value, timefrom.value, timeto.value);
-    add.get_speed(loc.value, dir.value, dtfrom.value, this.value, timefrom.value, timeto.value, 
-                  temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
-    add.get_axles(loc.value, dtfrom.value, this.value, dir.value, timefrom.value, timeto.value, 
-                  temp.slider("option", "values")[0], temp.slider("option", "values")[1],
-                  speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+    if(loc.value != "")
+    {
+      console.log(this.value);
+        add.get_time(loc.value, dir.value, dtfrom.value, this.value);
+        add.get_temp(loc.value, dir.value, dtfrom.value, this.value, timefrom.value, timeto.value);
+        add.get_speed(loc.value, dir.value, dtfrom.value, this.value, timefrom.value, timeto.value, 
+                      temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
+        add.get_axles(loc.value, dtfrom.value, this.value, dir.value, timefrom.value, timeto.value, 
+                      temp.slider("option", "values")[0], temp.slider("option", "values")[1],
+                      speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+    }
+    else
+      alert("Please select a location");
   }
 
   //DONE
   dir.onchange = function(e){
-    console.log(this.value);
-    add.get_dates(loc.value, this.value);
-    add.get_time(loc.value, this.value, dtfrom.value, dtto.value);
-    add.get_temp(loc.value, this.value, dtfrom.value, dtto.value, timefrom.value, timeto.value);
-    add.get_speed(loc.value, this.value, dtfrom.value, dtto.value, timefrom.value, timeto.value, 
-                  temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
-    add.get_axles(loc.value, dtfrom.value, dtto.value, this.value, timefrom.value, timeto.value, 
-                  temp.slider("option", "values")[0], temp.slider("option", "values")[1],
-                  speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+    if(loc.value != "")
+    {
+      console.log(this.value);
+      add.get_dates(loc.value, this.value);
+      add.get_time(loc.value, this.value, dtfrom.value, dtto.value);
+      add.get_temp(loc.value, this.value, dtfrom.value, dtto.value, timefrom.value, timeto.value);
+      add.get_speed(loc.value, this.value, dtfrom.value, dtto.value, timefrom.value, timeto.value, 
+                    temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
+      add.get_axles(loc.value, dtfrom.value, dtto.value, this.value, timefrom.value, timeto.value, 
+                    temp.slider("option", "values")[0], temp.slider("option", "values")[1],
+                    speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+    }
+    else
+      alert("Please select a location");
   }
 
   //DONE
   timefrom.onchange = function(e){
-    console.log(this.value);
-    add.get_temp(loc.value, dir.value, dtfrom.value, dtto.value, this.value, timeto.value);
-    add.get_speed(loc.value, dir.value, dtfrom.value, dtto.value, this.value, timeto.value, 
-                  temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
-    add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, this.value, timeto.value, 
-                  temp.slider("option", "values")[0], temp.slider("option", "values")[1],
-                  speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+    if(loc.value != "")
+    {
+      console.log(this.value);
+      add.get_temp(loc.value, dir.value, dtfrom.value, dtto.value, this.value, timeto.value);
+      add.get_speed(loc.value, dir.value, dtfrom.value, dtto.value, this.value, timeto.value, 
+                    temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
+      add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, this.value, timeto.value, 
+                    temp.slider("option", "values")[0], temp.slider("option", "values")[1],
+                    speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+    }
+    else
+      alert("Please select a location");
   }
 
   //DONE
   timeto.onchange = function(e){
-    console.log(this.value);
-    add.get_temp(loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, this.value);
-    add.get_speed(loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, this.value, 
-                  temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
-    add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, timefrom.value, this.value, 
-                  temp.slider("option", "values")[0], temp.slider("option", "values")[1],
-                  speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+    if(loc.value != "")
+    {
+      console.log(this.value);
+      add.get_temp(loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, this.value);
+      add.get_speed(loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, this.value, 
+                    temp.slider("option", "values")[0], temp.slider("option", "values")[1]);
+      add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, timefrom.value, this.value, 
+                    temp.slider("option", "values")[0], temp.slider("option", "values")[1],
+                    speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+    }
+    else
+      alert("Please select a location");
   }
 
   //sliders do not have onchange.
@@ -121,8 +146,10 @@ $(document).ready(function(){
     console.log([loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, timeto.value, axle.slider("option", "values"), 
                  speed.slider("option", "values"), temp.slider("option", "values")])
   });*/
-  
+
+  //Search button ready.
   $("#btn_submit2").click(function(){
+    var criteria = {};
     var axle_vals = axle.slider("option", "values");
   var speed_vals = speed.slider("option", "values");
   var temp_vals = temp.slider("option", "values");
@@ -130,8 +157,24 @@ $(document).ready(function(){
   $.each($("input[name='collist[]']:checked"),function(){
     cols.push($(this).val());
   });
-   console.log([loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, timeto.value, axle_vals[0], axle_vals[1], 
-                speed_vals[0], speed_vals[1] , temp_vals[0], temp_vals[1]]);
+  criteria["loc"] = loc.value;
+  criteria['dir'] = dir.value;
+  criteria['dtfrom'] = dtfrom.value;
+  criteria['dtto'] = dtto.value;
+  criteria['tmfrom'] = timefrom.value;
+  criteria['tmto'] = timeto.value;
+  criteria['axlefrom'] = axle_vals[0];
+  criteria['axleto'] = axle_vals[1];
+  criteria["speedfrom"] = speed_vals[0];
+  criteria['speedto'] = speed_vals[1];
+  criteria['tempfrom'] = temp_vals[0];
+  criteria['tempto'] = temp_vals[1];
+  criteria['cols'] = cols;
+  console.log(criteria);
+  if(cols.length === 0)
+    alert("Please select columns to fetch.");
+  else
+    add.get_data(criteria);
   });
 
 
@@ -152,7 +195,6 @@ $(document).ready(function(){
 
 
 var add = {
-
   make_time_picker : function(){
     var starttime = $("#timeFrom");
     var endtime = $("#timeTo");
@@ -221,9 +263,14 @@ var add = {
       slide:function(event, ui){
         $('#speed').val( "$" + ui.values[0] + " - $" + ui.values[1]);
         document.getElementById("speed").value = ui.values[0] + " - " + ui.values[1];
-        add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, timefrom.value, timeto.value, 
+        if(loc.value != "")
+        {
+          add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, timefrom.value, timeto.value, 
                       temp.slider("option", "values")[0], temp.slider("option", "values")[1],
                       ui.values[0], ui.values[1]);
+        }
+        else
+          alert("Please select a location");
       }
     });
   },
@@ -243,10 +290,15 @@ var add = {
       slide:function(event, ui){
         $('#temperature').val( "$" + ui.values[0] + " - $" + ui.values[1]);
         document.getElementById("temperature").value = ui.values[0] + " - " + ui.values[1];
-        add.get_speed(loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, timeto.value, 
-                  ui.values[0], ui.values[1]);
-        add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, timefrom.value, timeto.value, 
-                  ui.values[0], ui.values[1], speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+        if(loc.value != "")
+        {
+          add.get_speed(loc.value, dir.value, dtfrom.value, dtto.value, timefrom.value, timeto.value, 
+                    ui.values[0], ui.values[1]);
+          add.get_axles(loc.value, dtfrom.value, dtto.value, dir.value, timefrom.value, timeto.value, 
+                    ui.values[0], ui.values[1], speed.slider("option", "values")[0], speed.slider("option", "values")[1]);
+        }
+        else
+          alert("Please select a location");
       }
     });
   },
@@ -259,8 +311,6 @@ var add = {
       slide:function(event, ui){
         $('#axles').val( "$" + ui.values[0] + " - $" + ui.values[1]);
         document.getElementById("axles").value = ui.values[0] + " - " + ui.values[1];
-        console.log(typeof(ui.values[0]));
-        console.log(ui.values[1]);
       }
     });
   },
@@ -276,6 +326,11 @@ var add = {
         var sel = document.getElementById('LocationList');
         var opt = document.createElement('option');
         var input_sites = JSON.parse(data);
+        opt.innerHTML = " -- SELECT AN OPTION --";
+        opt.setAttribute("disabled", true);
+        opt.setAttribute("selected", true);
+        opt.setAttribute("value", "");
+        sel.appendChild(opt);
         for(var i = 0; i < input_sites.length; i++) {
           opt = document.createElement('option');
           opt.innerHTML = input_sites[i];
@@ -360,6 +415,27 @@ var add = {
       }
     });
   },
+
+  get_data : function(data){
+    postData = {'data':JSON.stringify(data) , 'reqType':"search"};
+    $.ajax({
+      cache:false,
+      type:'POST',
+      data:postData,
+      async:false,
+      url:'requestwrapper2.php',
+      crossDomain:true,
+      success:function(data){
+        data = JSON.parse(data);
+        console.log(data);
+      },
+      failure:function(){
+        alert("Failed to get data!!");
+      }
+    });
+
+  },
+
 
   get_dates : function(location, direction){
     //make a keyword mapping to differentiate between different post calls.

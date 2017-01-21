@@ -39,6 +39,9 @@ switch ($method) {
 				$ret_val = get_speeds($conn, $_POST['location'], $_POST['dir'], $_POST['datefrom'], $_POST['dateto'],
 									  $_POST['timefrom'], $_POST['timeto'], $_POST['tempfrom'], $_POST['tempto']);
 				break;
+			case 'search':
+				$ret_val = search_db($conn, json_decode($_POST['data'], true));
+				break;
 			default:
 				$ret_val = "reqType is invalid.";
 				break;
