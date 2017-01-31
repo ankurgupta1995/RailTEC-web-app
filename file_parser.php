@@ -9,6 +9,9 @@ function parser($lines)
 	$flag = 0;
 	$peaks_array = array();
 	$peakloc_array = array();
+	$top_temp = 0.0;
+	$base_temp = 0.0;
+	$ambient_temp = 0.0;
 
 	foreach($lines as $key => $value)
 	{
